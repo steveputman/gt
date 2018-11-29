@@ -65,5 +65,5 @@ test_that("the `fmt_passthrough()` function works correctly", {
     (tbl_latex %>%
        fmt_passthrough(columns = "num_2", rows = num_2 < 50, pattern = "{x}%") %>%
        render_formats_test(context = "latex"))[["num_2"]],
-    c("34\\%", NA, "23\\%", NA, "35\\%", NA, NA))
+    c("34\\%", "74", "23\\%", "93", "35\\%", "76", "57"))
 })

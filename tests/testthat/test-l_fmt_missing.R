@@ -45,5 +45,5 @@ test_that("the `fmt_missing()` function works correctly", {
     (tbl_latex %>%
        fmt_missing(columns = "num_1", rows = num_2 < 50) %>%
        render_formats_test(context = "latex"))[["num_1"]],
-    c("---", NA, "---", NA, "---", NA, NA))
+    c("---", "74", "---", "93", "---", "76", "NA"))
 })

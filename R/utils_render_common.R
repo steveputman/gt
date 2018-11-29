@@ -62,8 +62,11 @@ render_formats <- function(output_df,
       # Perform rendering but only do so if the column is present
       if (col %in% colnames(data_df)) {
 
-        output_df[[col]][fmt$rows] <-
-          fmt$func[[eval_func]](data_df[[col]][fmt$rows])
+        result <- fmt$func[[eval_func]](data_df[[col]][fmt$rows])
+        # If any of the resulting output is `NA`, that means we want to NOT
+        # make changes to those particular cells' output (i.e. inherit the
+        # results of the previous formatter).
+        output_df[[col]][fmt$rows][!is.na(result)] <- na.omit(result)
       }
     }
   }
