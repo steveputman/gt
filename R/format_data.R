@@ -166,8 +166,12 @@ fmt_number <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
+
           x
         }
       ))
@@ -445,8 +449,11 @@ fmt_percent <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
 
           x
         },
@@ -488,8 +495,11 @@ fmt_percent <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
 
           x
         }
@@ -678,8 +688,12 @@ fmt_currency <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
+
           x
         },
         html = function(x) {
@@ -718,8 +732,12 @@ fmt_currency <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
+
           x
         },
         latex = function(x) {
@@ -759,11 +777,15 @@ fmt_currency <- function(data,
           }
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x[non_na_x] <- paste0(pre_post_txt[1], x[non_na_x], pre_post_txt[2])
+          x[non_na_x] <-
+            apply_pattern_fmt(
+              pattern,
+              values = x[non_na_x]
+            )
+
           x
         }
-        ))
+      ))
 }
 
 #' Format values as dates
@@ -1095,8 +1117,11 @@ fmt_passthrough <- function(data,
         html = function(x) {
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x <- paste0(pre_post_txt[1], x, pre_post_txt[2])
+          x <-
+            apply_pattern_fmt(
+              pattern,
+              values = x
+            )
 
           if (escape) {
             x <- x %>% process_text(context = "html")
@@ -1107,8 +1132,11 @@ fmt_passthrough <- function(data,
         latex = function(x) {
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x <- paste0(pre_post_txt[1], x, pre_post_txt[2])
+          x <-
+            apply_pattern_fmt(
+              pattern,
+              values = x
+            )
 
           if (escape) {
             x <- x %>% process_text(context = "latex")
@@ -1119,8 +1147,11 @@ fmt_passthrough <- function(data,
         default = function(x) {
 
           # Handle formatting of pattern
-          pre_post_txt <- get_pre_post_txt(pattern)
-          x <- paste0(pre_post_txt[1], x, pre_post_txt[2])
+          x <-
+            apply_pattern_fmt(
+              pattern,
+              values = x
+            )
 
           x
         }
