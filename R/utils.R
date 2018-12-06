@@ -384,6 +384,16 @@ get_pre_post_txt <- function(pattern) {
   c(prefix, suffix)
 }
 
+# Handle formatting of pattern
+apply_pattern_fmt <- function(pattern, values) {
+
+  for (i in seq_along(values)) {
+    values[i] <- gsub("{x}", values[i], pattern, fixed = TRUE)
+  }
+
+  values
+}
+
 # Derive a label based on a formula or a function name
 #' @import rlang
 #' @noRd
