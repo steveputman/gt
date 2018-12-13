@@ -697,7 +697,7 @@ add_call_to_list <- function(data) {
 }
 
 # Reconstruct a set of gt statements for creating a table
-#' @importFrom rlang get_expr is_quosures is_quosure prepend
+#' @import rlang
 #' @noRd
 get_stmt_lines <- function(data) {
 
