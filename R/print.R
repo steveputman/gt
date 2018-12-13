@@ -53,6 +53,7 @@ as.tags.gt_tbl <- function(x, ...) {
   html_tbl <- htmltools::tagList(
     htmltools::tags$style(htmltools::HTML(css)),
     tags$div(id = id, style = htmltools::css(`overflow-x` = "auto"), htmltools::HTML(html_table))
+    #htmltools::tags$script("setTimeout(function() {alert(\"hello\")}, 500); ")
   )
 
   html_tbl
