@@ -643,3 +643,55 @@ footnote_glyphs <- function(x,
       paste(rep(val_i, rep_i), collapse = "")}
   ) %>% unname()
 }
+
+add_call_to_list <- function(data) {
+
+  fn_list <- attr(data, "fn_list", exact = TRUE)
+
+  # Deparse the function call
+  fn_call <- deparse(sys.call(-1))
+
+  fn_call <-
+    paste(fn_call, collapse = "") %>%
+    tidy_gsub("\\s\\s*", " ")
+
+  # Get the function name
+  fn_name <-
+    fn_call %>%
+    tidy_gsub("\\(.*\\)$", "")
+
+  # Obtain the formals part of the function; this
+  # will be updated with input values
+  fn_args_vals <-
+    formals(
+      fn_call %>%
+        tidy_gsub("\\(.*", "")
+    )
+
+  args <- fn_args_vals %>% names()
+
+  for (i in seq(args)) {
+
+    if (args[i] == "data") {
+      fn_args_vals["data"][[1]] <- "."
+    } else if (is.null(dynGet(args[i]))) {
+      fn_args_vals[args[i]][[1]] <- "NULL"
+    } else {
+      fn_args_vals[args[i]][[1]] <- dynGet(args[i])
+    }
+  }
+
+  # Create a list of arguments and their input values
+  list_args_vals <- list(fn_args_vals)
+
+  # Use the name of the calling function as the name
+  # of the list component
+  names(list_args_vals) <- fn_name
+
+  # Append the list to `fn_list`
+  fn_list <- c(fn_list, list_args_vals)
+
+  attr(data, "fn_list") <- fn_list
+
+  data
+}
