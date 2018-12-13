@@ -695,3 +695,150 @@ add_call_to_list <- function(data) {
 
   data
 }
+
+# Reconstruct a set of gt statements for creating a table
+#' @importFrom rlang get_expr is_quosures is_quosure prepend
+#' @noRd
+get_stmt_lines <- function(data) {
+
+  fn_list <- attr(data, "fn_list", exact = TRUE)
+
+  call_lines <- c()
+
+  for (k in seq(fn_list)) {
+
+    call_str <- c()
+
+    if (k > 1 && names(fn_list[k]) == "fmt" && grepl("fmt_.*", names(fn_list[k - 1]))) {
+      k <- k + 1
+    }
+
+    for (i in seq(fn_list[[k]])) {
+
+      if (inherits(fn_list[[k]][[i]], "...")) {
+
+        call_str <- c(call_str, "")
+
+      } else if (names(fn_list[[k]][i]) == "locations") {
+
+        locations_type <- (fn_list[[k]][[i]] %>% class())[1]
+
+        locations_vec <- c()
+
+        for (location in names(fn_list[[k]][[i]])) {
+
+          locations_vec <-
+            c(locations_vec,
+              paste(
+                location, "=",
+                paste0(
+                  fn_list[[k]][[i]][location] %>%
+                    rlang::get_expr() %>%
+                    as.character() %>%
+                    tidy_gsub("^~", "") %>%
+                    paste(collapse = ", ")
+                )
+              )
+            )
+        }
+
+        call_str <-
+          c(call_str,
+            paste0(
+              "locations = ",
+              locations_type, "(",
+              paste(locations_vec, collapse = ", "),
+              ")")
+          )
+
+      } else if (rlang::is_quosures(fn_list[[k]][[i]])) {
+
+        if (names(fn_list[[k]][i]) %in% c("columns", "rows")) {
+
+          call_str <-
+            c(call_str,
+              paste0(
+                "vars(",
+                fn_list[[k]][[i]] %>%
+                  rlang::get_expr() %>%
+                  as.character() %>%
+                  tidy_gsub("^~", "") %>%
+                  paste(collapse = ", "),
+                ")"
+              )
+            )
+        }
+
+      } else if (rlang::is_quosure(fn_list[[k]][[i]])) {
+
+        call_str <-
+          c(call_str,
+            paste(
+              names(fn_list[[k]][i]), "=",
+              fn_list[[k]][[i]] %>%
+                rlang::get_expr() %>%
+                as.expression() %>%
+                as.character()
+            )
+          )
+
+      } else if (!rlang::is_quosure(fn_list[[k]][[i]])) {
+
+        if (names(fn_list[[k]][i]) == "data") {
+
+          val <- "."
+
+        } else if (inherits(fn_list[[k]][[i]], "from_markdown")) {
+
+          val <- paste0("md(\"", fn_list[[k]][[i]], "\")")
+
+        } else if (inherits(fn_list[[k]][[i]][1], "character") &
+                   !(fn_list[[k]][[i]][1] %in% c("NULL", "NA"))) {
+
+          if (length(fn_list[[k]][[i]]) > 1 &
+              names(fn_list[[k]][i]) %in% c("align")) {
+
+            val <- paste0("\"", fn_list[[k]][[i]][1], "\"")
+
+          } else if (length(fn_list[[k]][[i]]) == 1 &
+                     fn_list[[k]][[i]][1] %in% c("NULL", "NA")) {
+
+            val <- fn_list[[k]][[i]]
+
+          } else if (length(fn_list[[k]][[i]]) > 1) {
+
+            val <- paste0("c(", paste0("\"", fn_list[[k]][[i]], "\"", collapse = ", "), ")")
+
+          } else {
+
+            val <- paste0("\"", fn_list[[k]][[i]], "\"")
+          }
+
+        } else {
+          val <- fn_list[[k]][[i]]
+        }
+
+        call_str <-
+          c(call_str,
+            paste(names(fn_list[[k]][i]), "=", val)
+          )
+
+      }
+    }
+
+    call_str <-
+      paste0((fn_list[k] %>% names()), "(", paste(call_str, collapse = ", "), ")")
+
+    call_lines <- c(call_lines, call_str)
+  }
+
+  stmt_lines <-
+    call_lines %>%
+    tidy_gsub("^", "  ") %>%
+    rlang::prepend("tbl_data") %>%
+    paste(collapse = " %>%\n") %>%
+    tidy_gsub("\\(data = .,", "(.,") %>%
+    tidy_gsub(", , ", ", ")
+
+  stmt_lines
+}
