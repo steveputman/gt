@@ -132,6 +132,10 @@ fmt_number <- function(data,
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
   fmt(data = data,
@@ -304,6 +308,10 @@ fmt_scientific <- function(data,
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
   fmt(data = data,
@@ -400,6 +408,10 @@ fmt_percent <- function(data,
 
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
@@ -635,6 +647,10 @@ fmt_currency <- function(data,
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
   fmt(data = data,
@@ -858,6 +874,10 @@ fmt_date <- function(data,
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
   fmt(data = data,
@@ -957,6 +977,10 @@ fmt_time <- function(data,
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
   fmt(data = data,
@@ -1019,6 +1043,10 @@ fmt_datetime <- function(data,
 
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions as a function list to `fmt()`
@@ -1085,6 +1113,10 @@ fmt_passthrough <- function(data,
 
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions (as a function list) to `fmt()`
@@ -1165,6 +1197,10 @@ fmt_missing <- function(data,
 
   # Capture expression in `rows`
   rows <- rlang::enquo(rows)
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Pass `data`, `columns`, `rows`, and the formatting
   # functions (as a function list) to `fmt()`
@@ -1265,6 +1301,10 @@ fmt <- function(data,
     func = fns,
     cols = resolved_columns,
     rows = resolved_rows)
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Incorporate the `formatter_list` object as the next
   # list in the `formats` list of lists

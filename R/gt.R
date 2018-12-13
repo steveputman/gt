@@ -56,6 +56,13 @@ gt <- function(data,
                rownames_to_stub = FALSE,
                stub_group.sep = getOption("gt.stub_group.sep", " - ")) {
 
+  # Copy `data` to create attr of original table data
+  original_data <- data
+
+  # Create a `fn_list` list for storing the functions and
+  # variable values used to make the table
+  fn_list <- list()
+
   # If the option to place rownames in the stub
   #   is taken, then the `stub_df` data frame will
   #   be pre-populated with rownames in the `rowname`
@@ -168,6 +175,7 @@ gt <- function(data,
 
   # Apply initialized data frames as attributes
   # within the object
+  attr(data_tbl, "orig_df") <- original_data
   attr(data_tbl, "boxh_df") <- boxh_df
   attr(data_tbl, "stub_df") <- stub_df
   attr(data_tbl, "footnotes_df") <- footnotes_df
@@ -207,6 +215,9 @@ gt <- function(data,
       list(groups = character(0))
   }
 
+  # Apply the function list (`fn_list`) as an attribute
+  attr(data_tbl, "fn_list") <- fn_list
+
   # Apply the input data table as an attribute
   attr(data_tbl, "data_df") <- data
 
@@ -222,6 +233,10 @@ gt <- function(data,
   # Apply the `gt_tbl` class to the object while
   # also keeping the `data.frame` class
   class(data_tbl) <- c("gt_tbl", class(data_tbl))
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data_tbl <- add_call_to_list(data = data_tbl)
 
   # Automatically align columns with `cols_align()`
   data_tbl %>% cols_align()

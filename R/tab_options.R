@@ -196,6 +196,10 @@ tab_options <- function(data,
                         row.striping.include_stub = NULL,
                         row.striping.include_field = NULL) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Extract the `opts_df` data frame object from `data`
   opts_df <- attr(data, "opts_df", exact = TRUE)
 

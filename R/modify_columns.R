@@ -37,6 +37,10 @@ cols_align <- function(data,
                        align = c("auto", "left", "center", "right"),
                        columns = TRUE) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Get the `align` value, this stops the function if there is no match
   align <- match.arg(align)
 
@@ -133,6 +137,10 @@ cols_label <- function(data,
                        ...,
                        .list = list2(...)) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Collect a named list of column labels
   labels_list <- .list
 
@@ -206,6 +214,10 @@ cols_label <- function(data,
 cols_move <- function(data,
                       columns,
                       after) {
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # If using the `vars()` helper, get the columns as a character vector
   if (inherits(columns, "quosures")) {
@@ -316,6 +328,10 @@ cols_move <- function(data,
 cols_move_to_start <- function(data,
                                columns) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # If using the `vars()` helper, get the columns as a character vector
   if (inherits(columns, "quosures")) {
     columns <- columns %>% lapply(`[[`, 2) %>% as.character()
@@ -389,6 +405,10 @@ cols_move_to_start <- function(data,
 #' @export
 cols_move_to_end <- function(data,
                              columns) {
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # If using the `vars()` helper, get the columns as a character vector
   if (inherits(columns, "quosures")) {
@@ -473,6 +493,10 @@ cols_move_to_end <- function(data,
 cols_hide <- function(data,
                       columns) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # If using the `vars()` helper, get the columns as a character vector
   if (inherits(columns, "quosures")) {
     columns <- columns %>% lapply(`[[`, 2) %>% as.character()
@@ -531,6 +555,10 @@ cols_hide <- function(data,
 cols_split_delim <- function(data,
                              delim,
                              columns = NULL) {
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Escape any characters that require escaping
   delim <- gsub("\\.", "\\\\.", delim)
@@ -615,6 +643,10 @@ cols_merge <- function(data,
                        col_2,
                        pattern = "{1} {2}") {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # If using the `vars()` helper, get `col_1` as a character vector
   if (inherits(col_1, "quosures")) {
     col_1 <- col_1 %>% lapply(`[[`, 2) %>% as.character()
@@ -695,6 +727,10 @@ cols_merge_uncert <- function(data,
                               col_val,
                               col_uncert) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Set the formatting pattern
   pattern <- "{1} \u00B1 {2}"
 
@@ -773,6 +809,10 @@ cols_merge_uncert <- function(data,
 cols_merge_range <- function(data,
                              col_begin,
                              col_end) {
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   # Set the formatting pattern
   pattern <- "{1} \u2014 {2}"

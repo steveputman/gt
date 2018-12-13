@@ -12,6 +12,10 @@
 row_group_order <- function(data,
                             groups) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Stop function if `groups` is not a `character` or
   #   `numeric` object
   if (!inherits(groups, c("character", "numeric"))) {

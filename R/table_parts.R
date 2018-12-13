@@ -71,6 +71,10 @@ tab_header <- function(data,
 tab_stubhead_label <- function(data,
                                label) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   attr(data, "stubhead_label") <-
     list(stubhead_label = label)
 
@@ -147,8 +151,12 @@ tab_row_group <- function(data,
                           rows = NULL,
                           others = NULL) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Capture the `rows` expression
-  row_expr <- rlang::enquo(rows)
+  rows <- rlang::enquo(rows)
 
   # Create a row group if a `group` is provided
   if (!is.null(group)) {
@@ -164,7 +172,7 @@ tab_row_group <- function(data,
 
     # Resolve the row numbers using the `resolve_vars` function
     resolved_rows <-
-      resolve_vars(var_expr = row_expr, var_names = rownames, data_df = data_df)
+      resolve_vars(var_expr = rows, var_names = rownames, data_df = data_df)
 
     # Place the `group` label in the `groupname` column
     # `stub_df`
@@ -249,6 +257,10 @@ tab_spanner <- function(data,
   checkmate::assert_character(
     label, len = 1, any.missing = FALSE, null.ok = FALSE)
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # If using the `vars()` helper, get the columns as a character vector
   if (inherits(columns, "quosures")) {
     columns <- columns %>% lapply(`[[`, 2) %>% as.character()
@@ -302,6 +314,10 @@ tab_spanner <- function(data,
 #' @export
 tab_source_note <- function(data,
                             source_note) {
+
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
 
   if ("source_note" %in% names(attributes(data))) {
 

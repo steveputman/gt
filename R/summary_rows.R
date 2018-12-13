@@ -92,6 +92,10 @@ summary_rows <- function(data,
     columns <- columns %>% lapply(`[[`, 2) %>% as.character()
   }
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   if ("summary" %in% names(attributes(data))) {
 
     attr(data, "summary") <-

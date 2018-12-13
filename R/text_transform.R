@@ -61,6 +61,10 @@ text_transform <- function(data,
                            locations,
                            fn) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Resolve into a list of locations
   locations <- as_locations(locations)
 

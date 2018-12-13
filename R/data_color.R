@@ -91,6 +91,10 @@ data_color <- function(data,
                        apply_to = "bkgd",
                        autocolor_text = TRUE) {
 
+  # Use `add_call_to_list()` to update the function list
+  # (`fn_list`), which is to be stored
+  data <- add_call_to_list(data)
+
   # Extract `data_df` from the gt object
   data_df <- attr(data, "data_df", exact = TRUE)
 
