@@ -385,13 +385,11 @@ get_pre_post_txt <- function(pattern) {
 }
 
 # Handle formatting of pattern
-apply_pattern_fmt <- function(pattern, values) {
+#' @importFrom glue glue
+#' @noRd
+apply_pattern_fmt_x <- function(pattern, values) {
 
-  for (i in seq_along(values)) {
-    values[i] <- gsub("{x}", values[i], pattern, fixed = TRUE)
-  }
-
-  values
+  glue::glue(pattern, x = values) %>% as.character()
 }
 
 # Derive a label based on a formula or a function name
