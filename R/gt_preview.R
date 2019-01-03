@@ -1,7 +1,19 @@
-#' Preview a gt table object
+#' Preview a \pkg{gt} table object
 #'
-#' Create a preview version of table. Here we can specify the first and last
-#' \code{n} rows for the preview table.
+#' Sometimes you may want to see just a small portion of your input data. We can
+#' use \code{gt_preview()} in place of \code{gt()} to get the first x rows of
+#' data and the last y rows of data (which can be set by the \code{top_n} and
+#' \code{bottom_n} arguments). It's not advised to use additional \pkg{gt} API
+#' functions to further modify the output of \code{gt_preview()}. Furthermore,
+#' you cannot pass a \pkg{gt} object to \code{gt_preview()}.
+#'
+#' Any grouped data or magic columns such as \code{rowname} and \code{groupname}
+#' will be ignored by \code{gt_preview()} and, as such, one cannot add a stub or
+#' group rows in the output table. By default, the output table will include row
+#' numbers in a stub (including a range of row numbers for the omitted rows).
+#' This row numbering option can be deactivated by setting \code{incl_rownums}
+#' to \code{FALSE}.
+#'
 #' @param data a \code{data.frame} object or a tibble.
 #' @param top_n this value will be used as the number of rows from the top of
 #'   the table to display. The default, \code{5}, will show the first five rows
@@ -10,13 +22,21 @@
 #'   of the table to display. The default, \code{1}, will show the final row of
 #'   the table.
 #' @param incl_rownums an option to include the row numbers for \code{data} in
-#'   the table stub.
+#'   the table stub. By default, this is \code{TRUE}.
 #' @return an object of class \code{gt_tbl}.
 #' @examples
-#' # Create a preview of the `mtcars`
-#' # dataset; invoking the `gt_tbl`
-#' # object will display it
-#' gt_tbl <- gt_preview(mtcars)
+#' # Use `gtcars` to create a gt table
+#' # preview (with only a few of its
+#' # columns); you'll see the first five
+#' # rows and the last row
+#' tab_1 <-
+#'   gtcars %>%
+#'   dplyr::select(mfr, model, year) %>%
+#'   gt_preview()
+#'
+#' @section Figures:
+#' \if{html}{\figure{man_gt_preview_1.svg}{options: width=100\%}}
+#'
 #' @family table-part creation/modification functions
 #' @export
 gt_preview <- function(data,
@@ -84,7 +104,8 @@ gt_preview <- function(data,
   # Use a fixed-width font for the rownums, if they are included
   if (incl_rownums) {
 
-    gt_tbl <- gt_tbl %>%
+    gt_tbl <-
+      gt_tbl %>%
       tab_style(
         style = "font-family:Courier;",
         locations = cells_stub())
@@ -93,7 +114,8 @@ gt_preview <- function(data,
   # Add styling of ellipsis row, if it is present
   if (has_ellipsis_row) {
 
-    gt_tbl <- gt_tbl %>%
+    gt_tbl <-
+      gt_tbl %>%
       tab_style(
         style = cells_styles(bkgd_color = "#E4E4E4"),
         locations = cells_data(rows = ellipsis_row)) %>%
@@ -103,7 +125,8 @@ gt_preview <- function(data,
 
     if (incl_rownums) {
 
-      gt_tbl <- gt_tbl %>%
+      gt_tbl <-
+        gt_tbl %>%
         tab_style(
           style = cells_styles(bkgd_color = "#E4E4E4", text_size = "12px"),
           locations = cells_stub(rows = ellipsis_row)) %>%
@@ -113,7 +136,8 @@ gt_preview <- function(data,
 
     } else {
 
-      gt_tbl <- gt_tbl %>%
+      gt_tbl <-
+        gt_tbl %>%
         tab_style(
           style = "padding-top:8px;padding-bottom:8px;",
           locations = cells_data(rows = ellipsis_row))

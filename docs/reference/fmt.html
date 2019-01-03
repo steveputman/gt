@@ -8,6 +8,13 @@
 
 <title>Set a column format with a formatter function — fmt • gt</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
@@ -32,7 +39,14 @@
 
 <meta property="og:title" content="Set a column format with a formatter function — fmt" />
 
-<meta property="og:description" content="Set a column format with a formatter function" />
+<meta property="og:description" content="The fmt() function provides greater control in formatting raw data
+values than any of the specialized fmt_*() functions that are
+available in gt. Along with the columns and rows
+arguments that provide some precision in targeting data cells, the fns
+argument allows you to define one or more functions for manipulating the raw
+data." />
+
+<meta property="og:image" content="https://gt.rstudio.com/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -70,10 +84,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/intro-creating-gt-tables.html">Intro</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -85,22 +96,21 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/case-study-gtcars.html">Case Study: gtcars</a>
-    </li>
-    <li>
-      <a href="../articles/creating-display-tables.html">Creating Display Tables</a>
-    </li>
-    <li>
-      <a href="../articles/creating-summary-lines.html">Creating Summary Lines</a>
-    </li>
+    <li class="dropdown-header">How to Use</li>
     <li>
       <a href="../articles/gt-datasets.html">gt Datasets</a>
+    </li>
+    <li>
+      <a href="../articles/creating-summary-lines.html">Summary Lines</a>
+    </li>
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/case-study-gtcars.html">Case Study: gtcars</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
@@ -130,7 +140,12 @@
 
     <div class="ref-description">
     
-    <p>Set a column format with a formatter function</p>
+    <p>The <code>fmt()</code> function provides greater control in formatting raw data
+values than any of the specialized <code>fmt_*()</code> functions that are
+available in <span class="pkg">gt</span>. Along with the <code>columns</code> and <code>rows</code>
+arguments that provide some precision in targeting data cells, the <code>fns</code>
+argument allows you to define one or more functions for manipulating the raw
+data.</p>
     
     </div>
 
@@ -174,6 +189,25 @@ to the rows we need (e.g., <code>[colname_1] &gt; 100 &amp; [colname_2] &lt; 50<
 
     <p>an object of class <code>gt_tbl</code>.</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If providing a single function to <code>fns</code>, the recommended format is in
+the form: <code>fns = function(x) ...</code>. This single function will format the
+targeted data cells the same way regardless of the output format (e.g., HTML,
+LaTeX, RTF).</p>
+<p>If you require formatting of <code>x</code> that depends on the output format, a
+list of functions can be provided for the <code>html</code>, <code>latex</code>, and
+<code>default</code> contexts. This can be in the form of <code>fns = list(html =
+function(x) ..., latex = function(x) ..., default = function(x) ...)</code>. In
+this multiple-function case, we recommended including the <code>default</code>
+function as a fallback if all contexts aren't provided.</p>
+<p>As with all of the <code>fmt_*()</code> functions, targeting of values is done
+through <code>columns</code> and additionally by <code>rows</code> (if nothing is
+provided for <code>rows</code> then entire columns are selected). A number of
+helper functions exist to make targeting more effective. Conditional
+formatting is possible by providing a conditional expression to the
+<code>rows</code> argument. See the Arguments section for more information on this.</p>
+    
     <h2 class="hasAnchor" id="figures"><a class="anchor" href="#figures"></a>Figures</h2>
 
     
@@ -181,17 +215,19 @@ to the rows we need (e.g., <code>[colname_1] &gt; 100 &amp; [colname_2] &lt; 50<
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other data formatting functions: <code><a href='fmt_currency.html'>fmt_currency</a></code>,
-  <code><a href='fmt_datetime.html'>fmt_datetime</a></code>, <code><a href='fmt_date.html'>fmt_date</a></code>,
-  <code><a href='fmt_missing.html'>fmt_missing</a></code>, <code><a href='fmt_number.html'>fmt_number</a></code>,
-  <code><a href='fmt_passthrough.html'>fmt_passthrough</a></code>, <code><a href='fmt_percent.html'>fmt_percent</a></code>,
-  <code><a href='fmt_scientific.html'>fmt_scientific</a></code>, <code><a href='fmt_time.html'>fmt_time</a></code></p></div>
+    <div class='dont-index'><p>Other data formatting functions: <code><a href='data_color.html'>data_color</a></code>,
+  <code><a href='fmt_currency.html'>fmt_currency</a></code>, <code><a href='fmt_datetime.html'>fmt_datetime</a></code>,
+  <code><a href='fmt_date.html'>fmt_date</a></code>, <code><a href='fmt_missing.html'>fmt_missing</a></code>,
+  <code><a href='fmt_number.html'>fmt_number</a></code>, <code><a href='fmt_passthrough.html'>fmt_passthrough</a></code>,
+  <code><a href='fmt_percent.html'>fmt_percent</a></code>, <code><a href='fmt_scientific.html'>fmt_scientific</a></code>,
+  <code><a href='fmt_time.html'>fmt_time</a></code>, <code><a href='text_transform.html'>text_transform</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Use `exibble` to create a gt table;</span>
-<span class='co'># NA values in different columns will</span>
-<span class='co'># be given replacement text</span>
+<span class='co'># format the numeric values in the `num`</span>
+<span class='co'># column with a function supplied to</span>
+<span class='co'># the `fns` argument</span>
 <span class='no'>tab_1</span> <span class='kw'>&lt;-</span>
   <span class='no'>exibble</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='no'>row</span>, -<span class='no'>group</span>) <span class='kw'>%&gt;%</span>
@@ -210,6 +246,8 @@ to the rows we need (e.g., <code>[colname_1] &gt; 100 &amp; [colname_2] &lt; 50<
       
       <li><a href="#value">Value</a></li>
 
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#figures">Figures</a></li>
 
       <li><a href="#see-also">See also</a></li>
@@ -226,7 +264,7 @@ to the rows we need (e.g., <code>[colname_1] &gt; 100 &amp; [colname_2] &lt; 50<
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
 </div>
       </footer>
    </div>

@@ -25,6 +25,9 @@ title, etc.).}
 
 \item{fn}{the function to use for text transformation.}
 }
+\value{
+an object of class \code{gt_tbl}.
+}
 \description{
 Perform targeted text transformation with a function
 }
@@ -40,7 +43,8 @@ Perform targeted text transformation with a function
 # a function within `text_transform()`,
 # where `x` is a formatted vector of
 # column values
-exibble \%>\%
+tab_1 <-
+  exibble \%>\%
   dplyr::select(num, char, currency) \%>\%
   dplyr::slice(1:4) \%>\%
   gt() \%>\%

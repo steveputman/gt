@@ -13,6 +13,7 @@
 #'   types of locations (e.g., cell data values, stub group headings, the table
 #'   title, etc.).
 #' @param fn the function to use for text transformation.
+#' @return an object of class \code{gt_tbl}.
 #' @examples
 #' # Use `exibble` to create a gt table;
 #' # transform the formatted text in the
@@ -20,7 +21,8 @@
 #' # a function within `text_transform()`,
 #' # where `x` is a formatted vector of
 #' # column values
-#' exibble %>%
+#' tab_1 <-
+#'   exibble %>%
 #'   dplyr::select(num, char, currency) %>%
 #'   dplyr::slice(1:4) %>%
 #'   gt() %>%

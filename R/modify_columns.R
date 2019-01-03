@@ -1,17 +1,28 @@
 #' Set the alignment of columns
+#'
+#' The individual alignments of columns (which includes the column labels and
+#' all of their data cells) can be modified. We have the option to align text to
+#' the \code{left}, the \code{center}, and the \code{right}. In a less explicit
+#' manner, we can allow \pkg{gt} to automatically choose the alignment of each
+#' column based on the data type (with the \code{auto} option).
+#'
+#' When you create a \pkg{gt} table object using \code{\link{gt}()}, automatic
+#' alignment of column labels and their data cells is performed. By default,
+#' left-alignment is applied to columns of class \code{character}, \code{Date},
+#' or \code{POSIXct}; center-alignment is for columns of class \code{logical},
+#' \code{factor}, or \code{list}; and right-alignment is used for the
+#' \code{numeric} and \code{integer} columns.
+#'
 #' @param data a table object that is created using the \code{\link{gt}()}
-#' function.
+#'   function.
 #' @param align the alignment type. This can be any of \code{"center"},
 #'   \code{"left"}, or \code{"right"} for center-, left-, or center-alignment.
 #'   Alternatively, the \code{"auto"} option (the default), will automatically
-#'   align values in columns according to the data type (i.e., column class). In
-#'   this way, left-alignment is applied to columns of class \code{character},
-#'   \code{Date}, or \code{POSIXct}; center-alignment is for columns of class
-#'   \code{logical}, \code{factor}, or \code{list}; and right-aligned is for the
-#'   \code{numeric} and \code{integer} columns.
+#'   align values in columns according to the data type (see the Details section
+#'   for specifics on which alignments are applied).
 #' @param columns an optional vector of column names for which the alignment
 #'   should be applied. If nothing is supplied, or if \code{columns} is
-#'   \code{TRUE}), then the alignment affects all columns.
+#'   \code{TRUE}), then the chosen alignment affects all columns.
 #' @return an object of class \code{gt_tbl}.
 #' @examples
 #' # Use `countrypops` to create a gt table;
@@ -83,6 +94,27 @@ cols_align <- function(data,
 }
 
 #' Relabel one or more columns
+#'
+#' Column labels can be modified from their default values (the names of the
+#' columns from the input table data). When you create a \pkg{gt} table object
+#' using \code{\link{gt}()}, column names effectively become the column labels.
+#' While this serves as a good first approximation, column names aren't often
+#' appealing as column labels in a \pkg{gt} output table. The
+#' \code{cols_label()} function provides the flexibility to relabel one or more
+#' columns and we even have the option to use the \code{\link{md}()} or
+#' \code{\link{html}()} helper functions for rendering column labels from
+#' Markdown or using HTML.
+#'
+#' It's important to note that while columns can be freely relabeled, we
+#' continue to refer to columns by their original column names. Column names in
+#' a tibble or data frame must be unique whereas column labels in \pkg{gt}
+#' have no requirement for uniqueness (which is useful for labeling columns as,
+#' say, measurement units that may be repeated several times---usually under
+#' different spanner column labels). Thus, we can still easily distinguish
+#' between columns in other \pkg{gt} function calls (e.g., in all of the
+#' \code{fmt*()} functions) even though we may lose distinguishability in column
+#' labels once they have been relabeled.
+#'
 #' @inheritParams cols_align
 #' @param ... one or more named arguments of column names from the input `data`
 #'   table along with their labels for display as the column labels. We can
@@ -176,6 +208,24 @@ cols_label <- function(data,
 }
 
 #' Move one or more columns
+#'
+#' On those occasions where you need to move columns this way or that way, we
+#' can make use of the \code{cols_move()} function. While it's true that the
+#' movement of columns can be done upstream of \pkg{gt}'s API, it is much easier
+#' and less error prone to use the function provided here. The movement
+#' procedure here takes one or more specified columns (in the \code{columns}
+#' argument) and places them to the right of a different column (the
+#' \code{after} argument). The ordering of the \code{columns} to be moved is
+#' preserved, as is the ordering of all other columns in the table.
+#'
+#' The columns supplied in \code{columns} must all exist in the table and none
+#' of them can be in the \code{after} argument. The \code{after} column must
+#' also exist and only one column should be provided here. If you need to place
+#' one or columns at the beginning of the column series, the
+#' \code{\link{cols_move_to_start}()} function should be used. Similarly, if
+#' those columns to move should be placed at the end of the column series then
+#' use \code{\link{cols_move_to_end}()}.
+#'
 #' @inheritParams cols_align
 #' @param columns the column names to move to as a group to a different
 #'   position. The order of the remaining columns will be preserved.
@@ -273,6 +323,20 @@ cols_move <- function(data,
 }
 
 #' Move one or more columns to the start
+#'
+#' We can easily move set of columns to the beginning of the column series and
+#' we only need to specify which \code{columns}. It's possible to do this
+#' upstream of \pkg{gt}'s API, however, it is easier with this function and it
+#' presents less possibility for error. The ordering of the \code{columns} that
+#' are moved to the start is preserved (same with the ordering of all other
+#' columns in the table).
+#'
+#' The columns supplied in \code{columns} must all exist in the table. If you
+#' need to place one or columns at the end of the column series, the
+#' \code{\link{cols_move_to_end}()} function should be used. More control is
+#' offered with the \code{\link{cols_move}()} function, where columns could be
+#' placed after a specific column.
+#'
 #' @inheritParams cols_align
 #' @param columns the column names to move to the left-most side of the table.
 #'   The order in which columns are provided will be preserved (as is the case
@@ -347,6 +411,20 @@ cols_move_to_start <- function(data,
 }
 
 #' Move one or more columns to the end
+#'
+#' It's possible to move a set of columns to the end of the column series, we
+#' only need to specify which \code{columns} are to be moved. While this can be
+#' done upstream of \pkg{gt}'s API, this function makes to process much easier
+#' and it's less error prone. The ordering of the \code{columns} that are moved
+#' to the end is preserved (same with the ordering of all other columns in the
+#' table).
+#'
+#' The columns supplied in \code{columns} must all exist in the table. If you
+#' need to place one or columns at the start of the column series, the
+#' \code{\link{cols_move_to_start}()} function should be used. More control is
+#' offered with the \code{\link{cols_move}()} function, where columns could be
+#' placed after a specific column.
+#'
 #' @inheritParams cols_align
 #' @param columns the column names to move to the right-most side of the table.
 #'   The order in which columns are provided will be preserved (as is the case
@@ -424,6 +502,22 @@ cols_move_to_end <- function(data,
 }
 
 #' Hide one or more columns
+#'
+#' The \code{cols_hide()} function allows us to hide one or more columns from
+#' appearing in the final output table. While it's possible and often desirable
+#' to omit columns from the input table data before introduction to the
+#' \code{\link{gt}()} function, there can be cases where the data in certain
+#' columns is useful (as a column reference during formatting of other columns)
+#' but the final display of those columns is not necessary.
+#'
+#' The hiding of columns is internally a rendering directive, so, all columns
+#' that are 'hidden' are still accessible and useful in any expression provided
+#' to a \code{rows} argument. Furthermore, the \code{cols_hide()} function (as
+#' with many \pkg{gt} functions) can be placed anywhere in a pipeline of
+#' \pkg{gt} function calls (acting as a promise to hide columns when the timing
+#' is right). However there's perhaps greater readability when placing this call
+#' closer to the end of such a pipeline.
+#'
 #' @inheritParams cols_align
 #' @param columns the column names to hide from the output display table. The
 #'   order of the remaining columns will be preserved. Values provided that do
@@ -452,14 +546,14 @@ cols_move_to_end <- function(data,
 #'   dplyr::filter(country_name == "Mongolia") %>%
 #'   tail(5) %>%
 #'   gt() %>%
+#'   cols_hide(
+#'     columns = vars(country_code_3, population)
+#'   ) %>%
 #'   tab_footnote(
 #'     footnote = "Population above 3,000,000.",
 #'     locations = cells_data(
 #'       columns = vars(year),
 #'       rows = population > 3000000)
-#'   ) %>%
-#'   cols_hide(
-#'     columns = vars(country_code_3, population)
 #'   )
 #'
 #' @section Figures:
@@ -498,11 +592,24 @@ cols_hide <- function(data,
 
 #' Create group names and column labels via delimited names
 #'
-#' This option will split delimited column names such that the first component
-#' is promoted to the group name (and hence will span over column labels) and
-#' subsequent components will represent the column label. Please note that
-#' reference to individual columns must continue to be through the original
-#' column names.
+#' This function will split selected delimited column names such that the first
+#' components (LHS) are promoted to being spanner column labels, and the
+#' secondary components (RHS) will become the column labels. Please note that
+#' reference to individual columns must continue to be the column names from the
+#' input table data (which are unique by necessity).
+#'
+#' If we look to the column names in the \code{iris} dataset as an example of
+#' how \code{cols_split_delim()} might be useful, we find the names
+#' \code{Sepal.Length}, \code{Sepal.Width}, \code{Petal.Length},
+#' \code{Petal.Width}. From this naming system, it's easy to see that the
+#' \code{Sepal} and \code{Petal} can group together the repeated common
+#' \code{Length} and \code{Width} values. In your own datasets, we can avoid a
+#' lengthy relabeling with \code{\link{cols_label}()} if column names can be
+#' fashioned beforehand to contain both the spanner column label and the column
+#' label. An additional advantage is that the column names in the input table
+#' data remain unique even though there may eventually be repeated column labels
+#' in the rendered output table).
+#'
 #' @inheritParams cols_align
 #' @param delim the delimiter to use to split an input column name. The
 #'   delimiter supplied will be autoescaped for the internal splitting
@@ -570,9 +677,29 @@ cols_split_delim <- function(data,
 }
 
 #' Merge two columns to a single column
+#'
+#' This function takes any two columns and merges them into a single column,
+#' using a pattern that specifies how the values in the data cells are combined.
+#' We specify the columns to merge together in the \code{col_1} and \code{col_2}
+#' arguments and the string-combining pattern is specified in \code{pattern}.
+#' The column that is retained is that of \code{col_1} whereas the column
+#' specified in \code{col_2} is dropped from the output table.
+#'
+#' There are two other column-merging functions that offer specialized behavior
+#' that is optimized for common table tasks: \code{\link{cols_merge_range}()}
+#' and \code{\link{cols_merge_uncert}()}. These functions operate similarly,
+#' where the second column specified is dropped from the output table. For all
+#' of the \code{cols_merge*()} functions, column removal occurs late in the
+#' rendering lifecycle so those secondary columns are still usable as column
+#' references (e.g., inside expressions provided to `rows` in the \code{fmt*()}
+#' functions).
+#'
 #' @inheritParams cols_align
-#' @param col_1 a column that contains values for the start of the range.
-#' @param col_2 a column that contains values for the end of the range.
+#' @param col_1 a retained column that contains values to be merged with those
+#'   in \code{col_2}.
+#' @param col_2 a column that contains values to be merged with those in
+#'   \code{col_1}. This column will be discarded but is still useful as a
+#'   reference in other \pkg{gt} functions.
 #' @param pattern a formatting pattern that specifies the arrangement of the
 #'   \code{col_1} and \code{col_1} values and any string literals. The
 #'   \code{col_1} column is represented as \code{{1}} whereas \code{col_2} is
@@ -658,6 +785,45 @@ cols_merge <- function(data,
 }
 
 #' Merge two columns to a value & uncertainty column
+#'
+#' The \code{cols_merge_uncert()} function is a specialized variant of the
+#' \code{\link{cols_merge}()} function. It operates by taking a base value
+#' column (\code{col_val}) and an uncertainty column (\code{col_uncert}) and
+#' merges them into a single column. What results is a column with values and
+#' associated uncertainties (e.g., \code{12.0 ± 0.1}), and, the column specified
+#' in \code{col_uncert} is dropped from the output table.
+#'
+#' This function could be somewhat replicated using \code{\link{cols_merge}()},
+#' however, \code{cols_merge_uncert()} employs the following specialized
+#' semantics for \code{NA} handling:
+#'
+#' \enumerate{
+#'
+#' \item \code{NA}s in \code{col_val} result in missing values for the merged
+#' column (e.g., \code{NA} + \code{0.1} = \code{NA})
+#'
+#' \item \code{NA}s in \code{col_uncert} (but not \code{col_val}) result in
+#' base values only for the merged column (e.g.,
+#' \code{12.0} + \code{NA} = \code{12.0})
+#'
+#' \item \code{NA}s both \code{col_val} and \code{col_uncert} result in
+#' missing values for the merged column (e.g., \code{NA} + \code{NA} =
+#' \code{NA})
+#' }
+#'
+#' Any resulting \code{NA} values in the \code{col_val} column following the
+#' merge operation can be easily formatted using the \code{\link{fmt_missing}()}
+#' function.
+#'
+#' This function is part of a set of three column-merging functions. The other
+#' two are the general \code{\link{cols_merge}()} function and the specialized
+#' \code{\link{cols_merge_range}()} function. These functions operate similarly,
+#' where the second column specified is dropped from the output table. For all
+#' of the \code{cols_merge*()} functions, column removal occurs late in the
+#' rendering lifecycle so those secondary columns are still usable as column
+#' references (e.g., inside expressions provided to `rows` in the \code{fmt*()}
+#' functions).
+#'
 #' @inheritParams cols_align
 #' @param col_val a single column name that contains the base values.
 #' @param col_uncert a single column name that contains the uncertainty values.
@@ -741,6 +907,45 @@ cols_merge_uncert <- function(data,
 }
 
 #' Merge two columns to a value range column
+#'
+#' The \code{cols_merge_range()} function is a specialized variant of the
+#' \code{\link{cols_merge}()} function. It operates by taking a two columns that
+#' constitute a range of values (\code{col_begin} and \code{col_end}) and merges
+#' them into a single column. What results is a column containing both values
+#' separated by a long dash (e.g., \code{12.0 — 20.0}). The column specified in
+#' \code{col_end} is dropped from the output table.
+#'
+#' This function could be somewhat replicated using \code{\link{cols_merge}()},
+#' however, \code{cols_merge_range()} employs the following specialized
+#' semantics for \code{NA} handling:
+#'
+#' \enumerate{
+#'
+#' \item \code{NA}s in \code{col_begin} result in missing values for the merged
+#' column (e.g., \code{NA} + \code{20.0} = \code{NA})
+#'
+#' \item \code{NA}s in \code{col_end} (but not \code{col_begin}) result in
+#' a display of only the \code{col_begin} values only for the merged column
+#' (e.g., \code{12.0} + \code{NA} = \code{12.0})
+#'
+#' \item \code{NA}s both \code{col_begin} and \code{col_end} result in
+#' missing values for the merged column (e.g., \code{NA} + \code{NA} =
+#' \code{NA})
+#' }
+#'
+#' Any resulting \code{NA} values in the \code{col_begin} column following the
+#' merge operation can be easily formatted using the \code{\link{fmt_missing}()}
+#' function.
+#'
+#' This function is part of a set of three column-merging functions. The other
+#' two are the general \code{\link{cols_merge}()} function and the specialized
+#' \code{\link{cols_merge_uncert}()} function. These functions operate
+#' similarly, where the second column specified is dropped from the output
+#' table. For all of the \code{cols_merge*()} functions, column removal occurs
+#' late in the rendering lifecycle so those secondary columns are still usable
+#' as column references (e.g., inside expressions provided to `rows` in the
+#' \code{fmt*()} functions).
+#'
 #' @inheritParams cols_align
 #' @param col_begin a column that contains values for the start of the range.
 #' @param col_end a column that contains values for the end of the range.

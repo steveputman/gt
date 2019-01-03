@@ -55,3 +55,91 @@ info_time_style <- function() {
       title = "Preset Time Formats",
       subtitle = md("Usable in the `fmt_time()` and `fmt_datetime()` functions"))
 }
+
+#' View a table with info on many different color palettes
+#' @param color_pkgs a vector of color packages that determines which sets of
+#'   palettes should be displayed in the information table. If this is
+#'   \code{NULL} (the default) then all of the discrete palettes from all of the
+#'   color packages represented in \pkg{paletteer} will be displayed.
+#' @examples
+#' # Get a table of info on the `ggthemes`
+#' # color palettes (which are easily
+#' # accessible from the paletteer package)
+#' tab_1 <-
+#'   info_paletteer(
+#'     color_pkgs = "ggthemes")
+#'
+#' @section Figures:
+#' \if{html}{\figure{man_info_paletteer_1.svg}{options: width=100\%}}
+#'
+#' @importFrom dplyr filter pull select mutate
+#' @family information functions
+#' @export
+info_paletteer <- function(color_pkgs = NULL) {
+
+  if (is.null(color_pkgs)) {
+
+    color_pkgs <-
+      c(
+        "awtools", "dichromat", "dutchmasters", "ggsci", "ggpomological",
+        "ggthemes", "ghibli", "grDevices", "jcolors", "LaCroixColoR",
+        "NineteenEightyR", "nord", "ochRe", "palettetown", "pals",
+        "Polychrome", "quickpalette", "rcartocolor", "RColorBrewer",
+        "Redmonder", "wesanderson", "yarrr")
+  }
+
+  palettes_strips_df <-
+    palettes_strips %>%
+    dplyr::filter(package %in% color_pkgs)
+
+  palettes_strips <-
+    palettes_strips_df %>%
+    dplyr::pull(colors)
+
+  palettes_strips_df %>%
+    dplyr::select(package, palette, length) %>%
+    dplyr::mutate(`Color Count and Palette` = NA) %>%
+    gt(groupname_col = "package", rowname_col = "palette") %>%
+    text_transform(
+      locations = cells_data("Color Count and Palette"),
+      fn = function(x) {
+        palettes_strips
+      }
+    ) %>%
+    cols_label(
+      length = ""
+    ) %>%
+    tab_stubhead_label(label = "Package and Palette Name") %>%
+    tab_header(
+      title = md("Palettes Made Easily Available with **paletteer**"),
+      subtitle = md("Palettes like these are useful with the `data_color()` **gt** function")
+    ) %>%
+    tab_style(
+      style = cells_styles(text_align = "left"),
+      locations = list(
+        cells_title(groups = "title"),
+        cells_title(groups = "subtitle")
+      )
+    ) %>%
+    tab_style(
+      style = cells_styles(
+        bkgd_color = "#E3E3E3",
+        text_font = "Courier",
+        text_size = "smaller",
+        text_weight = "bold"),
+      locations = cells_stub(rows = TRUE)
+    ) %>%
+    tab_style(
+      style = cells_styles(text_font = "Courier"),
+      locations = cells_data(columns = vars(length))
+    ) %>%
+    tab_options(
+      stub_group.background.color = "#FFFFF0",
+      column_labels.background.color = "#666660",
+      stub_group.font.weight = "600", stub_group.font.size = "smaller") %>%
+    tab_source_note(source_note = md(
+      paste("The **paletteer** package is maintained by Emil Hvitfeldt. More information can be",
+            "found on [the **paletteer** site](https://emilhvitfeldt.github.io/paletteer/) and",
+            "on the [**CRAN** info page](https://cran.r-project.org/web/packages/paletteer/index.html).")
+    ))
+}

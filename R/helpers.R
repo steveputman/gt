@@ -1,7 +1,11 @@
 #' Helpers for targeting multiple cells in different locations
 #'
 #' These helper functions are used to target individual cells in different
-#' locations.
+#' locations (e.g., the stub, the column labels, the title, etc.). They can be
+#' used in any of these functions (which all have a \code{locations} argument):
+#' \code{\link{tab_footnote}()}, \code{\link{tab_style}()}, and
+#' \code{\link{text_transform}()} Furthermore, multiple locations can be
+#' targeted by enclosing several \code{cells_*()} helper functions in a list.
 #'
 #' The following helper functions can be used to target cells (roughly in order
 #' from the top to the bottom of a table):
@@ -28,18 +32,194 @@
 #' \item \code{cells_summary()}: targets summary cells in the table field using
 #' the \code{groups} argument and intersections of \code{columns} and
 #' \code{rows}.
-#'
 #' }
-#'
-#' The select helper functions are: \code{\link{starts_with}()},
-#'   \code{\link{ends_with}()}, \code{\link{contains}()},
-#'   \code{\link{matches}()}, \code{\link{one_of}()}, and
-#'   \code{\link{everything}()}.
 #'
 #' @param columns,rows,groups either a vector of names, a vector of
 #'   indices, values provided by \code{\link{vars}()}, values provided by
 #'   \code{c()}, or a select helper function (see Details for information on
 #'   these functions).
+#'
+#' @examples
+#' # Use `sp500` to create a gt table; add
+#' # a header (with a title and a subtitle),
+#' # and then add a footnote to the subtitle
+#' # with `tab_footnote()` and `cells_title()`
+#' # in `locations`
+#' tab_1 <-
+#'   sp500 %>%
+#'   dplyr::filter(
+#'     date >= "2015-01-05" &
+#'       date <="2015-01-10"
+#'   ) %>%
+#'   dplyr::select(
+#'     -c(adj_close, volume, high, low)
+#'   ) %>%
+#'   gt() %>%
+#'   tab_header(
+#'     title = "S&P 500",
+#'     subtitle = "Open and Close Values"
+#'   ) %>%
+#'   tab_footnote(
+#'     footnote = "All values in USD.",
+#'     locations = cells_title(
+#'       groups = "subtitle")
+#'   )
+#'
+#' # Use `sza` to create a gt table; add a
+#' # header and then add footnotes to the
+#' # column labels with `tab_footnote()` and
+#' # `cells_column_labels()` in `locations`
+#' tab_2 <-
+#'   sza %>%
+#'   dplyr::filter(
+#'     latitude == 20 & month == "jan" &
+#'       !is.na(sza)
+#'   ) %>%
+#'   dplyr::select(-latitude, -month) %>%
+#'   gt() %>%
+#'   tab_footnote(
+#'     footnote = "True solar time.",
+#'     locations = cells_column_labels(
+#'       columns = vars(tst))
+#'   ) %>%
+#'   tab_footnote(
+#'     footnote = "Solar zenith angle.",
+#'     locations = cells_column_labels(
+#'       columns = vars(sza))
+#'   )
+#'
+#' # Use `pizzaplace` to create a gt table
+#' # with grouped data; add a summary with the
+#' # `summary_rows()` function and then add a
+#' # footnote to the "peppr_salami" row group
+#' # label with `tab_footnote()` and with
+#' # `cells_group()` in `locations`
+#' tab_3 <-
+#'   pizzaplace %>%
+#'   dplyr::filter(
+#'     name %in% c("soppressata", "peppr_salami")
+#'   ) %>%
+#'   dplyr::group_by(name, size) %>%
+#'   dplyr::summarize(
+#'     `Pizzas Sold` = n()
+#'   ) %>%
+#'   gt(rowname_col = "size") %>%
+#'   summary_rows(
+#'     groups = TRUE,
+#'     columns = vars("Pizzas Sold"),
+#'     fns = list(TOTAL = "sum"),
+#'     formatter = fmt_number,
+#'     decimals = 0,
+#'     use_seps = TRUE
+#'   ) %>%
+#'   tab_footnote(
+#'     footnote = "The Pepper-Salami.",
+#'     cells_group(groups = "peppr_salami")
+#'   )
+#'
+#' # Use `sza` to create a gt table; color
+#' # all of the `month` values in the table
+#' # stub with `tab_style()`, using `cells_stub()`
+#' # in `locations` (`rows = TRUE` targets
+#' # all stub rows)
+#' tab_4 <-
+#'   sza %>%
+#'   dplyr::filter(
+#'     latitude == 20 & tst <= "1000") %>%
+#'   dplyr::select(-latitude) %>%
+#'   dplyr::filter(!is.na(sza)) %>%
+#'   tidyr::spread(key = "tst", value = sza) %>%
+#'   gt(rowname_col = "month") %>%
+#'   fmt_missing(
+#'     columns = TRUE,
+#'     missing_text = ""
+#'   ) %>%
+#'   tab_style(
+#'     style = cells_styles(
+#'       bkgd_color = "darkblue",
+#'       text_color = "white"),
+#'     locations = cells_stub(rows = TRUE)
+#'   )
+#'
+#' # Use `gtcars` to create a gt table; add
+#' # a footnote that targets a single data cell
+#' # with `tab_footnote()`, using `cells_data()`
+#' # in `locations` (`rows = hp == max(hp)` will
+#' # target a single row in the `hp` column)
+#' tab_5 <-
+#'   gtcars %>%
+#'   dplyr::filter(ctry_origin == "United Kingdom") %>%
+#'   dplyr::select(mfr, model, year, hp) %>%
+#'   gt() %>%
+#'   tab_options(footnote.glyph = "*") %>%
+#'   tab_footnote(
+#'     footnote = "Highest horsepower.",
+#'     locations = cells_data(
+#'       columns = vars(hp),
+#'       rows = hp == max(hp))
+#'   )
+#'
+#' # Use `countrypops` to create a gt table; add
+#' # some styling to the summary data cells with
+#' # with `tab_style()`, using `cells_summary()`
+#' # in `locations`
+#' tab_6 <-
+#'   countrypops %>%
+#'   dplyr::filter(
+#'     country_name == "Japan",
+#'     year < 1970) %>%
+#'   dplyr::select(-contains("country")) %>%
+#'   dplyr::mutate(
+#'     decade = paste0(substr(year, 1, 3), "0s")
+#'   ) %>%
+#'   dplyr::group_by(decade) %>%
+#'   gt(
+#'     rowname_col = "year",
+#'     groupname_col = "decade"
+#'   ) %>%
+#'   fmt_number(
+#'     columns = vars(population),
+#'     decimals = 0
+#'   ) %>%
+#'   summary_rows(
+#'     groups = "1960s",
+#'     columns = vars(population),
+#'     fns = list("min", "max"),
+#'     formatter = fmt_number,
+#'     decimals = 0
+#'   ) %>%
+#'   tab_style(
+#'     style = cells_styles(
+#'       text_style = "italic",
+#'       bkgd_color = "lightblue"),
+#'     locations = cells_summary(
+#'       groups = "1960s",
+#'       columns = vars(population),
+#'       rows = 1)
+#'   ) %>%
+#'   tab_style(
+#'     style = cells_styles(
+#'       text_style = "italic",
+#'       bkgd_color = "lightgreen"),
+#'     locations = cells_summary(
+#'       groups = "1960s",
+#'       columns = vars(population),
+#'       rows = 2)
+#'   )
+#'
+#' @section Figures:
+#' \if{html}{\figure{man_location_cells_1.svg}{options: width=100\%}}
+#'
+#' \if{html}{\figure{man_location_cells_2.svg}{options: width=100\%}}
+#'
+#' \if{html}{\figure{man_location_cells_3.svg}{options: width=100\%}}
+#'
+#' \if{html}{\figure{man_location_cells_4.svg}{options: width=100\%}}
+#'
+#' \if{html}{\figure{man_location_cells_5.svg}{options: width=100\%}}
+#'
+#' \if{html}{\figure{man_location_cells_6.svg}{options: width=100\%}}
+#'
 #' @name location_cells
 #' @return a list object of class \code{location_cells}.
 NULL
@@ -190,13 +370,19 @@ cells_summary <- function(groups = NULL,
 #'   transformation.
 #' @return a character object of class \code{from_markdown}.
 #' @examples
-#' # Create a table object using the
-#' # `mtcars` dataset and add a caption
-#' # that is to interpreted as Markdown
-#' gt_tbl <-
-#'   gt(mtcars, rownames_to_stub = TRUE) %>%
-#'     tab_stubhead_label(
-#'       label = md("car *make* and *model*"))
+#' # Use `exibble` to create a gt table;
+#' # when adding a title, use the `md()`
+#' # helper to use Markdown formatting
+#' tab_1 <-
+#'   exibble %>%
+#'   dplyr::select(currency, char) %>%
+#'   gt() %>%
+#'   tab_header(
+#'     title = md("Using *Markdown*"))
+#'
+#' @section Figures:
+#' \if{html}{\figure{man_md_1.svg}{options: width=100\%}}
+#'
 #' @family helper functions
 #' @export
 md <- function(text) {
@@ -213,14 +399,19 @@ md <- function(text) {
 #'   be sanitized.
 #' @return a character object of class \code{html}.
 #' @examples
-#' # Create a table object using the
-#' # `mtcars` dataset and add a caption
-#' # that is to interpreted as HTML
-#' gt_tbl <-
-#'   gt(mtcars, rownames_to_stub = TRUE) %>%
-#'     tab_stubhead_label(
-#'       label = html(
-#'         "car <em>make</em> and <em>model</em>"))
+#' # Use `exibble` to create a gt table;
+#' # when adding a title, use the `html()`
+#' # helper to use html formatting
+#' tab_1 <-
+#'   exibble %>%
+#'   dplyr::select(currency, char) %>%
+#'   gt() %>%
+#'   tab_header(
+#'     title = html("<em>HTML</em>"))
+#'
+#' @section Figures:
+#' \if{html}{\figure{man_html_1.svg}{options: width=100\%}}
+#'
 #' @family helper functions
 #' @importFrom htmltools HTML
 #' @export

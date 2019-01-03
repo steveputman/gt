@@ -2,7 +2,7 @@
 % Please edit documentation in R/gt_preview.R
 \name{gt_preview}
 \alias{gt_preview}
-\title{Preview a gt table object}
+\title{Preview a \pkg{gt} table object}
 \usage{
 gt_preview(data, top_n = 5, bottom_n = 1, incl_rownums = TRUE)
 }
@@ -18,20 +18,42 @@ of the table to display. The default, \code{1}, will show the final row of
 the table.}
 
 \item{incl_rownums}{an option to include the row numbers for \code{data} in
-the table stub.}
+the table stub. By default, this is \code{TRUE}.}
 }
 \value{
 an object of class \code{gt_tbl}.
 }
 \description{
-Create a preview version of table. Here we can specify the first and last
-\code{n} rows for the preview table.
+Sometimes you may want to see just a small portion of your input data. We can
+use \code{gt_preview()} in place of \code{gt()} to get the first x rows of
+data and the last y rows of data (which can be set by the \code{top_n} and
+\code{bottom_n} arguments). It's not advised to use additional \pkg{gt} API
+functions to further modify the output of \code{gt_preview()}. Furthermore,
+you cannot pass a \pkg{gt} object to \code{gt_preview()}.
 }
+\details{
+Any grouped data or magic columns such as \code{rowname} and \code{groupname}
+will be ignored by \code{gt_preview()} and, as such, one cannot add a stub or
+group rows in the output table. By default, the output table will include row
+numbers in a stub (including a range of row numbers for the omitted rows).
+This row numbering option can be deactivated by setting \code{incl_rownums}
+to \code{FALSE}.
+}
+\section{Figures}{
+
+\if{html}{\figure{man_gt_preview_1.svg}{options: width=100\%}}
+}
+
 \examples{
-# Create a preview of the `mtcars`
-# dataset; invoking the `gt_tbl`
-# object will display it
-gt_tbl <- gt_preview(mtcars)
+# Use `gtcars` to create a gt table
+# preview (with only a few of its
+# columns); you'll see the first five
+# rows and the last row
+tab_1 <-
+  gtcars \%>\%
+  dplyr::select(mfr, model, year) \%>\%
+  gt_preview()
+
 }
 \seealso{
 Other table-part creation/modification functions: \code{\link{gt}},

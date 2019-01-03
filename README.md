@@ -1,23 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<p align="center">
-
-<img src="man/figures/gt_hex_logo.svg" height="500px">
-
-</p>
-
-<p align="center">
+# gt <img src="man/figures/logo.svg" align="right" height="250px" />
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/gt)](https://cran.r-project.org/package=gt)
 [![Travis build
 status](https://travis-ci.com/rstudio/gt.svg?token=P7T9dzi5RLEq9j2Yepx5&branch=master)](https://travis-ci.com/rstudio/gt)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/rstudio/gt?branch=master&svg=true)](https://ci.appveyor.com/project/rstudio/gt)
 [![Coverage
 status](https://codecov.io/gh/rstudio/gt/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/gt?branch=master)
-
-</p>
 
 With the **gt** package, anyone can make wonderful-looking tables using
 the **R** programming language. The **gt** philosophy: we can construct
@@ -115,9 +109,8 @@ obtained from the [**Comprehensive R Archive Network
 working with R, use the [**RStudio Desktop
 IDE**](https://www.rstudio.com/products/rstudio/).
 
-You can install the development version of **gt** from **GitHub** using
-the **remotes** package. Use the following in the R console to install
-**gt**.
+You can install the development version of **gt** from **GitHub**. Use
+the following in the R console to install **gt**.
 
 ``` r
 install.packages("devtools")

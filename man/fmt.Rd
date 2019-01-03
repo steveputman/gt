@@ -32,7 +32,32 @@ to the rows we need (e.g., \code{[colname_1] > 100 & [colname_2] < 50}).}
 an object of class \code{gt_tbl}.
 }
 \description{
-Set a column format with a formatter function
+The \code{fmt()} function provides greater control in formatting raw data
+values than any of the specialized \code{fmt_*()} functions that are
+available in \pkg{gt}. Along with the \code{columns} and \code{rows}
+arguments that provide some precision in targeting data cells, the \code{fns}
+argument allows you to define one or more functions for manipulating the raw
+data.
+}
+\details{
+If providing a single function to \code{fns}, the recommended format is in
+the form: \code{fns = function(x) ...}. This single function will format the
+targeted data cells the same way regardless of the output format (e.g., HTML,
+LaTeX, RTF).
+
+If you require formatting of \code{x} that depends on the output format, a
+list of functions can be provided for the \code{html}, \code{latex}, and
+\code{default} contexts. This can be in the form of \code{fns = list(html =
+function(x) ..., latex = function(x) ..., default = function(x) ...)}. In
+this multiple-function case, we recommended including the \code{default}
+function as a fallback if all contexts aren't provided.
+
+As with all of the \code{fmt_*()} functions, targeting of values is done
+through \code{columns} and additionally by \code{rows} (if nothing is
+provided for \code{rows} then entire columns are selected). A number of
+helper functions exist to make targeting more effective. Conditional
+formatting is possible by providing a conditional expression to the
+\code{rows} argument. See the Arguments section for more information on this.
 }
 \section{Figures}{
 
@@ -41,8 +66,9 @@ Set a column format with a formatter function
 
 \examples{
 # Use `exibble` to create a gt table;
-# NA values in different columns will
-# be given replacement text
+# format the numeric values in the `num`
+# column with a function supplied to
+# the `fns` argument
 tab_1 <-
   exibble \%>\%
   dplyr::select(-row, -group) \%>\%
