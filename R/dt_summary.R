@@ -173,8 +173,8 @@ dt_summary_build <- function(data,
       select_data_tbl <-
         data_tbl %>%
         dplyr::select(!!columns) %>%
-        dplyr::mutate(groupname = !!grand_summary_col) %>%
-        dplyr::select(groupname, !!columns) %>%
+        dplyr::mutate(groupname = grand_summary_col) %>%
+        dplyr::select(groupname, columns) %>%
         as.data.frame(stringsAsFactors = FALSE)
 
     } else {
@@ -182,7 +182,9 @@ dt_summary_build <- function(data,
       select_data_tbl <-
         dplyr::bind_cols(
           stub_df %>% dplyr::select(groupname),
-          data_tbl[stub_df$rownum_i, columns]
+          stub_df$rownum_i %>%
+            lapply(FUN = function(x) data_tbl[x, columns]) %>%
+            dplyr::bind_rows()
         ) %>%
         as.data.frame(stringsAsFactors = FALSE)
     }
